@@ -1,6 +1,11 @@
 import webbrowser
 
-class Movie:
+class Video():
+	def __init__(self, title, duration):
+		self.title = title
+		self.duration = duration
+
+class Movie(Video):
 	""" This class provides a way to store movie related information"""
 	VALID_RATINGS = ["G", "PG", "PG-13", "R"]
 
@@ -12,3 +17,5 @@ class Movie:
 
 	def show_trailer(self):
 		webbrowser.open(self.trailer)
+
+class TvShow(Video):
