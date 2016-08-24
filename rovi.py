@@ -22,9 +22,9 @@ def create_request_url(entitytype, query, api_key, sig):
 
 # This function is used only for movies
 # The movie data have to be requested with this separate url because
-# This contains more detailed data such as director, actors, and so on.
-def create_request_url_details(cosmoid, api_key, sig):
-	return "http://api.rovicorp.com/data/v1.1/movie/info?cosmoid={}&country=US&language=en&format=json&apikey={}&sig={}".format(cosmoid, api_key, sig)
+# This contains more detailed data such as director, productions, and so on.
+def create_request_url_details(infotype, cosmoid, api_key, sig):
+	return "http://api.rovicorp.com/data/v1.1/movie/{}?cosmoid={}&country=US&language=en&format=json&apikey={}&sig={}".format(infotype, cosmoid, api_key, sig)
 
 def make_connection(request_url):
 	# connect to API to retrieve the data
@@ -51,27 +51,33 @@ def request_data(entitytype, sig, query):
 
 # This is only used for movies to take more detailed information
 # It uses different request format
-def request_movie(sig, cosmoid):
+def request_movie(infotype, sig, cosmoid):
 	# Setting API key
 	api_key, secret_key = reading_api_key()
 
 	# Setting request url
-	request_url = create_request_url_details(cosmoid, api_key, sig)
+	request_url = create_request_url_details(infotype, cosmoid, api_key, sig)
 	print "request url:", request_url
 
 	# Searching Batman related movies
 	return make_connection(request_url)
 
-def request_synopsis(sig, cosmoid):
-	# Setting API key
-	api_key, secret_key = reading_api_key()
+def parse_tag(line):
+	string = ""
+	a = 1
 
-	# Setting request url
-	request_url = create_request_url_synopsis(cosmoid, api_key, sig)
-	print "request url:", request_url
+	line = line.strip()
+	for i in line:
+		if i == "[":
+			a = 0
+		elif i == "]":
+			a = 2
+		elif a == 2:
+			a = 1
 
-	# Searching Batman related movies
-	return make_connection(request_url)
+		if a == 1:
+			string += i
+	return string
 
 def parsing_movies(line):
 	parsed = {}
@@ -82,4 +88,6 @@ def parsing_movies(line):
 	parsed["releaseYear"] = line["movie"]["releaseYear"]
 	parsed["releasedBy"] = line["movie"]["releasedBy"]
 	parsed["rating"] = line["movie"]["rating"]
+	if line["synopsis"]["synopsis"]:
+		parsed["synopsis"] = parse_tag(line["synopsis"]["synopsis"]["text"])
 	return parsed
