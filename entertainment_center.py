@@ -18,27 +18,50 @@ def reading_api_key():
 def create_request_url(entitytype, query, api_key, sig):
 	return "http://api.rovicorp.com/search/v2.1/video/search?entitytype={}&query={}&rep=1&size=20&offset=0&language=en&country=US&format=json&apikey={}&sig={}".format(entitytype, query, api_key, sig)
 
-def create_request_url_details(query, api_key, sig):
-	return "http://api.rovicorp.com/data/v1.1/movie/info?cosmoid={}&country=US&language=en&format=json&apikey={}&sig={}".format(query, api_key, sig)
+# This function is used only for movies
+# The movie data have to be requested with this separate url because
+# This contains more detailed data such as director, actors, and so on.
+def create_request_url_details(cosmoid, api_key, sig):
+	return "http://api.rovicorp.com/data/v1.1/movie/info?cosmoid={}&country=US&language=en&format=json&apikey={}&sig={}".format(cosmoid, api_key, sig)
 	
 # This is function is used to request url and extract data from it
-def request_API(sig, query, id):
+def request_data(entitytype, sig, query):
 	# Setting API key
 	api_key, secret_key = reading_api_key()
-	print "api_key:",api_key
-	print "secret key:",secret_key
-
-	# Setting query
-	query = "batman"
 
 	# Setting request url
-	request_url = "http://api.rovicorp.com/search/v2.1/video/search?entitytype=movie&query={}&rep=1&size=20&offset=0&language=en&country=US&format=json&apikey={}&sig={}".format(query, api_key, sig)
-	print request_url
+	request_url = create_request_url(entitytype, query, api_key, sig)
+	print "request url:", request_url
 
 	# Searching Batman related movies
 	connection = urllib.urlopen(request_url)
 	output = connection.read()
 	connection.close()
+
+	# Save the output into json format
+	output = json.loads(output)
+
+	return output
+
+# This is only used for movies to take more detailed information
+# It uses different request format
+def request_movie(sig, cosmoid):
+	# Setting API key
+	api_key, secret_key = reading_api_key()
+
+	# Setting request url
+	request_url = create_request_url_details(cosmoid, api_key, sig)
+	print "request url:", request_url
+
+	# Searching Batman related movies
+	connection = urllib.urlopen(request_url)
+	output = connection.read()
+	connection.close()
+	print output
+	# Save the output into json format
+	output = json.loads(output)
+
+	return output
 
 # Rovi is the API for video data. It uses sig variable that is only usuable for 5 minutes
 # once it is created. So instead of calling API everytime I run this script, I will save the result
@@ -50,29 +73,27 @@ if "movies.json" in os.listdir(r"./"):
 			output = json.loads(i)
 			break
 else:
-	# Setting API key
-	api_key, secret_key = reading_api_key()
-	print "api_key:",api_key
-	print "secret key:",secret_key
-	sig = "4ff6e610fefc9aa453a493854ce9e80b"
-	# Setting query
+	# entitytype is movie or tvseries
+	entitytype = "movie"
+
+	# sig has to be updated manually everytime I run the script
+	sig = "5d72e5009fd0a207eabbf7078020a3c8"
+
+	# Query will be always batman for this project
 	query = "batman"
 
+	# Create Json file from Rovi API
+	output = request_data(entitytype, sig, query)
 
-
-	# Searching Batman related movies
-	connection = urllib.urlopen(request_url)
-	output = connection.read()
-	connection.close()
-
-	# Save the output into json format
-	output = json.loads(output)
-
-	# We are only interested in title and id from this output
+	# We are going to request the data for each movie from output file
+	# This result will contain better data with more details
 	results = output['searchResponse']['results']
+	movies = []
 	for i in results:
-		print i['video']['masterTitle']
-		print i['id']
+		cosmoid = i['id']
+		print cosmoid
+		movies.append(request_movie(sig, cosmoid))
+	
 
 	# Save Json file to local drive
 	with open("movies.json", "w") as F:
