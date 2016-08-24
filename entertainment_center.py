@@ -7,7 +7,7 @@ import pprint
 import os
 import sys
 import time
-from rovi import request_data, request_movie
+from rovi import request_data, request_movie, parsing_movies
 
 # Rovi is the API for video data. It uses sig variable that is only usuable for 5 minutes
 # once it is created. So instead of calling API everytime I run this script, I will save the result
@@ -16,7 +16,7 @@ if "movies.json" in os.listdir(r"./"):
 	print("\nmovies.json is in the current directory.\n")
 	with open("movies.json") as F:
 		for i in F:
-			output = json.loads(i)
+			movies = json.loads(i)
 			break
 else:
 	try:
@@ -48,7 +48,13 @@ else:
 	with open("movies.json", "w") as F:
 		json.dump(movies, F)
 
-		
+movies_parsed = []
+for i in movies:
+	if i['status'] != 'error':
+		movies_parsed.append(parsing_movies(i))
+
+for i in movies_parsed:
+	pprint.pprint(i)
 
 toy_story = media.Movie("Toy Story", "A story of a boy and his toys that come to life",
 	"http://upload.wikimedia.org/wikipedia/en/1/13/Toy_Story.jpg",
