@@ -9,13 +9,17 @@ class Video():
 class Movie(Video):
 	""" This class provides a way to store movie related information"""
 	VALID_RATINGS = ["G", "PG", "PG-13", "R"]
-	def __init__(self, title, storyline, poster_image_url, trailer):
+	def __init__(self, title, storyline, poster_image_url, trailer, releaseYear, rating, director):
 		Video.__init__(self, title, storyline, poster_image_url)
 		self.trailer_youtube_url = trailer
+		self.releaseYear = releaseYear
+		self.rating = rating
+		self.director = director
 
 	def show_trailer(self):
 		webbrowser.open(self.trailer_youtube_url)
 
+# This is a class for TV shows. But it won't be included in the website this time.
 class TvShow(Video):
 	VALID_RATINGS = ["G", "PG", "PG-13", "R"]
 	def __init__(self, title, storyline, poster_image_url, trailer):
