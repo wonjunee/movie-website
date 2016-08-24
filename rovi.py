@@ -81,6 +81,7 @@ def parse_tag(line):
 
 def parsing_movies(line):
 	parsed = {}
+	parsed["id"] = line["movie"]["ids"]["cosmoId"]
 	parsed["title"] = line["movie"]["title"]
 	if line["movie"]["directors"]:
 		parsed["director"] = line["movie"]["directors"][0]['name']
