@@ -5,6 +5,7 @@ import urllib
 import json
 import pprint
 import os
+import time
 
 # This function will bring api key from the local file
 def reading_api_key():
@@ -77,7 +78,7 @@ else:
 	entitytype = "movie"
 
 	# sig has to be updated manually everytime I run the script
-	sig = "5d72e5009fd0a207eabbf7078020a3c8"
+	sig = "2e01942f7e7f8f0046a0db2dc098852e"
 
 	# Query will be always batman for this project
 	query = "batman"
@@ -91,17 +92,12 @@ else:
 	movies = []
 	for i in results:
 		cosmoid = i['id']
-		print cosmoid
+		time.sleep(1)
 		movies.append(request_movie(sig, cosmoid))
 	
-
 	# Save Json file to local drive
 	with open("movies.json", "w") as F:
-		json.dump(output, F)
-
-output = json.loads(output)
-# pprint.pprint(output)
-
+		json.dump(movies, F)
 
 toy_story = media.Movie("Toy Story", "A story of a boy and his toys that come to life",
 	"http://upload.wikimedia.org/wikipedia/en/1/13/Toy_Story.jpg",
