@@ -24,7 +24,7 @@ else:
 		entitytype = "movie"
 
 		# sig has to be updated manually everytime I run the script
-		sig = "9f33d82363a8d0b7aa40d6d5799d6623"
+		sig = "6e6e1efb9e56ee3dc086d8547a8385e6"
 
 		# Query will be always batman for this project
 		query = "batman"
@@ -38,23 +38,32 @@ else:
 	# We are going to request the data for each movie from output file
 	# This result will contain better data with more details
 	results = output['searchResponse']['results']
-	movies = []
+	movies = {}
+
+	# retrieving movie data
 	for i in results:
 		cosmoid = i['id']
-		time.sleep(1)
-		movies.append(request_movie(sig, cosmoid))
+		time.sleep(.5)
+		movies[cosmoid] = request_movie("info", sig, cosmoid)
+		movies[cosmoid]["synopsis"] = request_movie("synopsis", sig, cosmoid)
 	
 	# Save Json file to local drive
 	with open("movies.json", "w") as F:
 		json.dump(movies, F)
 
+# Parsing movies array. Only contain movie with synopsis
 movies_parsed = []
-for i in movies:
+for _,i in movies.iteritems():
 	if i['status'] != 'error':
-		movies_parsed.append(parsing_movies(i))
+		parsed_movie = parsing_movies(i)
+		if "synopsis" in parsed_movie.keys():
+			movies_parsed.append(parsing_movies(i))
 
 for i in movies_parsed:
 	pprint.pprint(i)
+
+# Number of movies
+print "Number of movies:", len(movies)
 
 toy_story = media.Movie("Toy Story", "A story of a boy and his toys that come to life",
 	"http://upload.wikimedia.org/wikipedia/en/1/13/Toy_Story.jpg",
