@@ -51,33 +51,31 @@ else:
 	with open("movies.json", "w") as F:
 		json.dump(movies, F)
 
-# Parsing movies array. Only contain movie with synopsis
+# Parsing movies array. Only contain movie with synopsis and director
 movies_parsed = []
 for _,i in movies.iteritems():
 	if i['status'] != 'error':
 		parsed_movie = parsing_movies(i)
-		if "synopsis" in parsed_movie.keys():
+		if "synopsis" in parsed_movie.keys() and "director" in parsed_movie.keys():
 			movies_parsed.append(parsing_movies(i))
 
+# Print movies
 for i in movies_parsed:
 	pprint.pprint(i)
+	pprint.pprint(i["director"])
+
 
 # Number of movies
 print "Number of movies:", len(movies)
 
-toy_story = media.Movie("Toy Story", "A story of a boy and his toys that come to life",
-	"http://upload.wikimedia.org/wikipedia/en/1/13/Toy_Story.jpg",
-	"https://www.youtube.com/watch?v=vwyZH85NQC4")
+# I manually found the trailer and image for each movie
+# rovi has the API for it but it needs more clearance before I can use such feature
+# Since I don't have such clearance, I decided to do this manually instead.
+movies_instances = []
+for i in movies_parsed:
+	globals()[i["id"]] = media.Movie(i["title"], i["synopsis"], None, None, i["releaseYear"], i["rating"], i["director"])
+	movies_instances.append(globals()[i["id"]].title)
 
-avatar = media.Movie("Avatar", "A marine on an alien planet",
-	"http://upload.wikimedia.org/wikipedia/id/b/b0/Avatar-Teaser-Poster.jpg",
-	"http://www.youtube.com/watch?v=-9ceBgWV8io")
-
-ratatouille = media.Movie("Ratatouille", "A rat is a chef in Paris",
-	"http://upload.wikimedia.org/wikipedia/en/5/50/RatatouillePoster.jpg",
-	"https://www.youtube.com/watch?v=3PsUJFEBC74")
-
-
-
-# movies = [toy_story, avatar, ratatouille]
-# fresh_tomatoes.open_movies_page(movies)
+for i in movies_instances:
+	print i
+# fresh_tomatoes.open_movies_page(movies_instances)
