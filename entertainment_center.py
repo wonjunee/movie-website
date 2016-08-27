@@ -8,6 +8,7 @@ import os
 import sys
 import time
 from rovi import request_data, request_movie, parsing_movies
+from clean_json import clean_json
 
 # Rovi is the API for video data. It uses sig variable that is only usuable for 5 minutes
 # once it is created. So instead of calling API everytime I run this script, I will save the result
@@ -50,6 +51,9 @@ else:
 	# Save Json file to local drive
 	with open("movies.json", "w") as F:
 		json.dump(movies, F)
+
+# Clean json file using clean_json function
+movies = clean_json(movies)
 
 # Parsing movies array. Only contain movie with synopsis and director
 movies_parsed = []
