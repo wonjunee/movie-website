@@ -75,11 +75,29 @@ print "Number of movies:", len(movies)
 # I manually found the trailer and image for each movie
 # rovi has the API for it but it needs more clearance before I can use such feature
 # Since I don't have such clearance, I decided to do this manually instead.
+
+# Updating poster_image_url and trailer
+trailer_image = {}
+with open("trailer_image_urls.txt") as F:
+	a = 0
+	for line in F:
+		if a % 3 == 0:
+			movie_title = line.strip()
+		elif a % 3 == 1:
+			movie_image = line.strip()
+		elif a % 3 == 2:
+			movie_trailer = line.strip()
+			trailer_image[movie_title] = [movie_image, movie_trailer]
+		a += 1
+for i in trailer_image:
+	print i, trailer_image[i]
+
 movies_instances = []
 for i in movies_parsed:
-	globals()[i["id"]] = media.Movie(i["title"], i["synopsis"], None, None, i["releaseYear"], i["rating"], i["director"])
-	movies_instances.append(globals()[i["id"]].title)
+	globals()[i["id"]] = media.Movie(i["title"], i["synopsis"], trailer_image[i["title"]][0], trailer_image[i["title"]][1], i["releaseYear"], i["rating"], i["director"])
+	movies_instances.append(globals()[i["id"]])
 
 for i in movies_instances:
-	print i
-# fresh_tomatoes.open_movies_page(movies_instances)
+	print i.title
+	print
+fresh_tomatoes.open_movies_page(movies_instances)
