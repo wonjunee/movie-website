@@ -77,6 +77,7 @@ def parse_tag(line):
 
 		if a == 1:
 			string += i
+	string = string.replace(u'\xe9',"")
 	return string
 
 def parsing_movies(line):
