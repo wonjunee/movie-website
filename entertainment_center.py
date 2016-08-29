@@ -94,8 +94,8 @@ for i in trailer_image:
 
 movies_instances = []
 for i in movies_parsed:
-	globals()[i["id"]] = media.Movie(i["title"], i["synopsis"], trailer_image[i["title"]][0], trailer_image[i["title"]][1], i["releaseYear"], i["rating"], i["director"])
-	movies_instances.append(globals()[i["id"]])
+	globals()[i["title"]] = media.Movie(i["title"], i["synopsis"], trailer_image[i["title"]][0], trailer_image[i["title"]][1], i["releaseYear"], i["rating"], i["director"])
+	movies_instances.append(globals()[i["title"]])
 
 for i in movies_instances:
 	print i.title
