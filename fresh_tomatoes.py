@@ -57,11 +57,10 @@ main_page_head = '''
             background-color: white;
         }
         #div2 {
-            white-space: nowrap;
-            width: 100%;
-            height: 300%;
             overflow: hidden;
-            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical; 
         }
     </style>
     <script type="text/javascript" charset="utf-8">
@@ -130,10 +129,11 @@ main_page_content = '''
 # A single movie entry html template
 movie_tile_content = '''
 <div class="col-md-6 col-lg-4 movie-tile text-center" data-trailer-youtube-id="{trailer_youtube_id}" data-toggle="modal" data-target="#trailer">
-    <img src="{poster_image_url}" width="220" height="342">
-    <h4>{movie_title} ({movie_release_year})</h4>
+    <img src="{poster_image_url}" width="220" height="340">
+    <h5>{movie_title}</h5>
+    <p>Release Year: {movie_release_year}</p>
     <p><i>Rating: {movie_rating}</i></p>
-    <p>Director: {movie_director} </p>
+    <p>Director: {movie_director}</p>
     <p>Synopsis: <div id=div2>{movie_synopsis}</div></p>
 </div>
 '''
