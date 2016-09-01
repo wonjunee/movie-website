@@ -15,13 +15,15 @@ Details
 **fresh_tomatoes.py**: This script contains Javascript, HTML, and CSS scripts that creates .html file showing list of batman movies created from **entertainment_center.py**.
 
 ---
-Still In Progress
----------
-This project is not completed. I am trying to figure out getting movie data easily from movie API but couldn't find a good API yet. I will keep searching until I find a good one. If I don't find it, then I can just create instances manually.
-
----
 Note 8/24/2016
 ---------
 Used Rovi API to retrieve movie data easily. Unfortunately, this API doesn't provide image url or trailer url.
 
 Will find these urls manually from google and save the data into separate file.
+
+---
+Completed!
+---------
+HTML for batman movie website is ready to go!
+
+Run **entertainment_center.py** file, then the script will create a website.
